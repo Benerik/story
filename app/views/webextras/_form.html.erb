@@ -1,0 +1,50 @@
+<%= form_for(@webextra ,:html => { :multipart => true}) do |f| %>
+  <% if @webextra.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@webextra.errors.count, "error") %> prohibited this webextra from being saved:</h2>
+
+      <ul>
+      <% @webextra.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :story_id %><br />
+   <%= text_field_with_auto_complete :story, :name ,:value => @webextra ? (@webextra.story  ? @webextra.story.name : '') : (params[:story] ? params[:story][:name] : (Story.find_by_id(session[:story_id]) ? Story.find_by_id(session[:story_id]).name : '')) %>
+     
+  </div>
+  <div class="field">
+    <%= f.label :summary %><br />
+    <%= f.text_area :summary ,:class => "mceEditor" %>
+  </div>
+  <div class="field">
+    <%= f.label 'Video' %><br />
+        <%= file_field_tag "video" %><br />
+  </div>
+  <div class="field">
+<div id="spinner" class="spinner" style="display:none;">
+
+        <%= image_tag("ajax-loader.gif", :alt => 'loading') %>
+</div>
+  </div>
+<script>
+  function openSpinner() {
+     $('spinner').show();
+  }
+</script>
+
+  <div class="actions">
+    <%= f.submit(:onclick => "openSpinner();") %>
+  </div>
+<% end %>

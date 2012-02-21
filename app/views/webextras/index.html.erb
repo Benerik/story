@@ -1,0 +1,36 @@
+<h1>Listing webextras</h1>
+<%= form_for :webextra,:remote => true, :html => { :method => :get} do |f| %>
+  <table>
+    <tr><td>
+        <%= f.label :title  %>
+      </td><td>
+        <%= f.text_field :title, :value => params[:webextra] ? params[:webextra][:title] : '' %>
+      </td><td>
+        <%= f.label :name  %>
+      </td><td>
+        <%= f.text_field :name, :value => params[:webextra] ? params[:webextra][:name] : '' %>
+      </td></tr>
+    <tr><td>
+        <%= f.label :summary  %>
+      </td><td>
+        <%= f.text_field :summary, :value => params[:webextra] ? params[:webextra][:summary] : '' %>
+      </td><td>
+        <%= f.label :story  %>
+      </td><td>
+      <%= text_field_with_auto_complete :story, :name ,:value => params[:story] ? params[:story][:name] : (Story.find_by_id(session[:story_id]) ? Story.find_by_id(session[:story_id]).name : '') %>
+      </td>
+    </tr>
+  </table>
+  <br />
+
+
+  <%= submit_tag("Search",  :class => 'pagination ajax' ) %>
+  <%= render "search_results" %>
+  Display <%= f.select(:record_number, [[10,10], [20, 20], [50, 50], [100, 100]] , :selected => params[:webextra] ? params[:webextra][:record_number] : 10) %> records
+
+  <br />
+
+  <%= link_to 'New Webextra', new_webextra_path %>
+  <%= link_to 'Back', stories_path(:story =>{:approved => 1}) %>
+
+<% end %>

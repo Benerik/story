@@ -1,0 +1,40 @@
+<div id="results">
+  <table>
+    <tr>
+
+      <%= sortable_table_header :name => "First name",   :sort => "first_name" ,:class => 'pagination ajax' %>
+      <%= sortable_table_header :name => "Last name",   :sort => "last_name" ,:class => 'pagination ajax' %>
+      <th>Phone 1</th>
+
+      <th></th>
+      <% if @valid_staff %>
+        <% if @valid_staff.is_senior_producer == true or @valid_staff.is_assignment_editor  == true or @valid_staff.is_producer == true %>
+          <th></th>
+        <% end %>
+      <% end %>
+      <% if session[:userid] != nil or Staff.find_by_userid(session[:userid]).userid == 'admin' %>
+        <th></th>
+      <% end %>
+    </tr>
+    <% if @characters %>
+      <% @characters.each do |character| %>
+        <tr>
+
+          <td><%= html_escape(character.first_name) %></td>
+          <td><%= html_escape(character.last_name) %></td>
+          <td><%= html_escape(character.phone_1) %></td>
+          <td><%= link_to 'Show', character %></td>
+          <% if @valid_staff %>
+            <% if @valid_staff.is_senior_producer == true or @valid_staff.is_assignment_editor  == true or @valid_staff.is_producer == true %>
+              <td><%= link_to 'Edit', edit_character_path(character) %></td>
+            <% end %>
+          <% end %>
+          <% if session[:userid] != nil and Staff.find_by_userid(session[:userid]).userid == 'admin' %>
+            <td><%= link_to 'Destroy', character, :confirm => 'Are you sure?', :method => :delete %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    <% end %>
+  </table>
+  <%= will_paginate @characters, :class => 'pagination ajax' %>
+</div>

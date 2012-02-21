@@ -1,0 +1,47 @@
+<div id="results">
+  <table>
+    <tr>
+      <%= sortable_table_header :name => "Deadline",   :sort => "deadline" ,:class => 'pagination ajax' %>
+      <%= sortable_table_header :name => "Name",   :sort => "name" ,:class => 'pagination ajax' %>
+      <th>Producer</th>
+      <th>Correspondent</th>
+      <th>Editor</th>
+      <th></th>
+      <% if @valid_staff %>
+        <% if @valid_staff.is_senior_producer == true or @valid_staff.is_assignment_editor  == true or @valid_staff.is_producer == true %>
+          <th></th>
+        <% end %>
+      <% end %>
+      <% if session[:userid] != nil and Staff.find_by_userid(session[:userid]).userid == 'admin' %>
+        <th></th>
+      <% end %>
+    </tr>
+
+    <% @stories.each do |story| %>
+      <%  if story.archived == true %>
+
+        <tr bgcolor="yellow">
+        <% else %>
+        <tr>
+        <% end %>
+        <td><%= html_escape(story.deadline) %></td>
+        <td><%= html_escape(story.name) %></td>
+        <td><%= story.producer ? story.producer.first_name + ' ' + story.producer.last_name : ''%></td>
+        <td><%= story.correspondent ? story.correspondent.first_name + ' ' + story.correspondent.last_name : '' %></td>
+        <td><%= story.editor ? story.editor.first_name + ' ' + story.editor.last_name : '' %></td>
+        <td><%= link_to 'Show', story %> </td>
+        <% if @valid_staff %>
+          <% if @valid_staff.is_senior_producer == true or @valid_staff.is_assignment_editor  == true or @valid_staff.is_producer == true %>
+            <td><%= link_to 'Edit', edit_story_path(story) %></td>
+                    <td><%= link_to 'Clone', :id => story.id , :action => 'clone' ,:controller => 'stories' %></td>
+          <% end %>
+        <% end %>
+        <% if session[:userid] != nil and Staff.find_by_userid(session[:userid]).userid == 'admin' %>
+          <td><%= link_to 'Destroy', story, :confirm => 'Are you sure?', :method => :delete %></td>
+
+  <% end %>
+      </tr>
+    <% end %>
+  </table>
+  <%= will_paginate @stories, :class => 'pagination ajax' %>
+</div>

@@ -1,0 +1,67 @@
+<%= form_for(@shoot) do |f| %>
+  <% if @shoot.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@shoot.errors.count, "error") %> prohibited this shoot from being saved:</h2>
+
+      <ul>
+        <% @shoot.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :date %><br />
+    <%= f.date_select :date %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+    <div class="field">
+    <%= f.label :story_id %><br />
+   <%= text_field_with_auto_complete :story, :name ,:value => @shoot ? (@shoot.story  ? @shoot.story.name : '') : (params[:story] ? params[:story][:name] : (Story.find_by_id(session[:story_id]) ? Story.find_by_id(session[:story_id]).name : '')) %>
+       </div>
+  <div class="field">
+    <%= f.label :crew_requirements %><br />
+    <%= f.text_area :crew_requirements, :class => "mceEditor"  %>
+  </div>
+  <div class="field">
+    <%= f.label :location %><br />
+    <%= f.text_area :location, :class => "mceEditor"  %>
+  </div>
+  <% if @valid_staff %>
+    <% if @valid_staff.is_senior_producer == true %>
+      <div class="field">
+        <%= f.label :senior_approval %><br />
+        <%= f.check_box :senior_approval %>
+      </div>
+    <% end %>
+  <% end %>
+  <% if @valid_staff %>
+    <% if @valid_staff.is_assignment_editor == true %>
+      <div class="field">
+        <%= f.label :assigned %><br />
+        <%= f.check_box :assigned %>
+      </div>
+    <% end %>
+  <% end %>
+  <div class="field">
+    <%= f.label :cameraperson %><br />
+
+    <%= f.select(:cameraperson_id, Staff.find(:all, :order => 'first_name asc, last_name asc').collect {|c| [c.first_name + ' ' + c.last_name, c.id ] }) %>
+
+  </div>
+  <div class="field">
+    <%= f.label :notes %><br />
+    <%= f.text_area :notes ,:class => "mceEditor" %>
+  </div>
+  <div class="field">
+    <%= f.label :preshow_tease %><br />
+    <%= f.text_area :preshow_tease, :class => "mceEditor"  %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

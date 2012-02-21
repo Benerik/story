@@ -1,0 +1,56 @@
+<%= javascript_include_tag "scriptaculous/prototype" %>
+
+<%= javascript_include_tag "scriptaculous/scriptaculous" %>
+<%= javascript_include_tag "scriptaculous/effects" %>
+
+<%= javascript_include_tag "scriptaculous/controls" %>
+<h1>Listing shoots</h1>
+<%= form_for :shoot, :remote => true, :html => { :method => :get} do |f| %>
+  <table>
+    <tr>
+      <td>
+        <%= f.label :name  %>
+      </td><td>
+        <%= f.text_field :name, :value => params[:shoot] ? params[:shoot][:name] : '' %>
+      </td><td>
+        <%= f.label :crew_requirements  %>
+      </td><td>
+        <%= f.text_field :crew_requirements, :value => params[:shoot] ? params[:shoot][:crew_requirements] : '' %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <%= f.label :location  %>
+      </td><td>
+        <%= f.text_field :location, :value => params[:shoot] ? params[:shoot][:location] : '' %>
+      </td><td>
+        <%= f.label :cameraperson %>
+      </td><td>
+        <%= f.select(:cameraperson_id, Staff.find(:all, :order => 'first_name asc, last_name asc').collect {|c| [c.first_name + ' ' + c.last_name, c.id ] },  :selected  => params[:shoot] ? params[:shoot][:cameraperson_id] : '', :include_blank => true) %>
+      </td>
+    </tr>
+        <tr>
+      <td>
+        <%= f.label :story  %>
+      </td><td>
+       
+   <%= text_field_with_auto_complete :story, :name ,:value => params[:story] ? params[:story][:name] : (Story.find_by_id(session[:story_id]) ? Story.find_by_id(session[:story_id]).name : '') %>
+
+      </td><td>
+
+      </td><td>
+
+      </td>
+    </tr>
+  </table>
+  <br />
+  <%= submit_tag("Search") %>
+  <%= render "search_results" %>
+  Display <%= f.select(:record_number, [[10,10], [20, 20], [50, 50], [100, 100]] , :selected => params[:shoot] ? params[:shoot][:record_number] : 10) %> records
+
+  <br/>
+  <%= link_to 'New Shoot', new_shoot_path %>
+  <%= link_to 'Back', stories_path(:story =>{:approved => 1}) %>
+
+
+<% end %>
